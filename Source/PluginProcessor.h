@@ -66,14 +66,21 @@ public:
     
     juce::AudioProcessorValueTreeState apvts{*this, nullptr, "Parameters", createParameterLayout()};
 
+    juce::dsp::IIR::Coefficients<float>::Ptr getFilterCoefficients() const
+    {
+        return myFilter.coefficients;
+    }
+    
 private:
     using Filter = juce::dsp::IIR::Filter<float>;
+    Filter myFilter;
 
     using CutFilter = juce::dsp::ProcessorChain<Filter, Filter, Filter, Filter>;
 
     using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
 
     MonoChain leftChain, rightChain;
+    
 
     enum ChainPositions
     {

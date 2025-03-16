@@ -13,9 +13,13 @@
 SimpleEQAudioProcessorEditor::SimpleEQAudioProcessorEditor (SimpleEQAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
+  DBG("EQPlotComponent::paint() called"); 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize(600, 400);
+    addAndMakeVisible(eqPlot);
+
+    startTimerHz(30);
 }
 
 SimpleEQAudioProcessorEditor::~SimpleEQAudioProcessorEditor()
@@ -37,4 +41,14 @@ void SimpleEQAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    eqPlot.setBounds(getLocalBounds().reduced(20));
+}
+
+void SimpleEQAudioProcessorEditor::timerCallback()
+{   
+    //auto coeffs = processorRef.getFilterCoefficients();
+    eqPlot.setFilterCoefficients(audioProcessor.getFilterCoefficients());
+
+    //eqPlot.setFilterCoefficients(coeffs);
+    eqPlot.repaint();
 }
